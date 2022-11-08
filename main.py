@@ -1,4 +1,5 @@
 import argparse
+import csv
 
 #function to load a FASTA file into a dictionary, >ID is used as key, sequence is used as value
 def fasta_to_dict(fasta_file):
@@ -38,8 +39,17 @@ def sequence_finder(fasta_file, sequence):
                 if key in results_dict:
                     results_dict[key].append((seq, KMPSearch(seq,value)))
                 else:
-                    results_dict[key] = list([seq, KMPSearch(seq,value)])
-    print(results_dict)
+                    #results_dict[key] = list([seq, KMPSearch(seq,value)])
+                    results_dict[key] = [(seq, KMPSearch(seq,value))]
+    filednames=['FASTA_ID', 'Sequence_found_and_start_ index']
+    with open(fasta_file.split('.')[0] + 'sequence_found.csv', 'w') as f:
+        writer = csv.writer(f)
+        writer.writerow(filednames)
+        for k, v in results_dict.items():
+            writer.writerow([k, *v]) # *expands list in value
+    return results_dict
+
+
 
 def find_all_substrings(a_str, sub):
     start =0
@@ -51,7 +61,7 @@ def find_all_substrings(a_str, sub):
         start += len(sub)
 
 def KMPSearch(pat, txt):
-    index = ''
+    index = []
     M = len(pat)
     N = len(txt)
     # lps array must be as long as pattern
@@ -66,8 +76,8 @@ def KMPSearch(pat, txt):
             i += 1
             j += 1
         if j == M:
-            index += str(i-j)
-            index += ' '
+            index.append(i-j)
+            #index += ' '
             j = lps[j-1]
 
         # mismatch after j matches
