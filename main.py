@@ -42,7 +42,7 @@ def sequence_finder(fasta_file, sequence):
                     #results_dict[key] = list([seq, KMPSearch(seq,value)])
                     results_dict[key] = [(seq, KMPSearch(seq,value))]
     filednames=['FASTA_ID', 'Sequence_found_and_start_ index']
-    with open(fasta_file.split('.')[0] + 'sequence_found.csv', 'w') as f:
+    with open(fasta_file.split('.')[0] + ' sequence_found.csv', 'w') as f:
         writer = csv.writer(f)
         writer.writerow(filednames)
         for k, v in results_dict.items():
